@@ -63,11 +63,17 @@
 
 
 <style lang="scss">
-
+  #register_page{
+    height: 100%;
+    min-height: 800px;
+    width: inherit;
+    min-width: 1140px;
+    background: rgba(255,111,0,0.7);
+  }
   #register_page_head{
     height: 100px;
     width: 1140px;
-    border-bottom: 1px solid darkgray;
+    border-bottom: 1px solid white;
     margin: 0 auto;
     margin-bottom: 50px;
   }
@@ -82,6 +88,7 @@
     border: darkgray 1px solid;
     padding: 20px 20px;
     border-radius: 5px;
+    background: rgba(255,255,255,0.5);
   }
 
   #register_button{
