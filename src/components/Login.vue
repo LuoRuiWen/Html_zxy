@@ -1,16 +1,17 @@
 <template>
     <div id="login" class="login-page">
-        <div id="main" class="main-box">
-          <div id="head" class="head-box">
+        <div id="login_main" class="main-box">
+          <div id="login_main_head" class="head-box">
+            <h1 style="margin:0 auto;">欢迎使用车票销售系统</h1>
           </div>
           <div id="login_form" class="login-form">
               <el-form  ref="form" :model="form" label-width="80px">
                   <el-form-item label="账号：">
-                      <el-input v-model="form.userName">
+                      <el-input v-model="form.mobile">
                       </el-input>
                   </el-form-item>
                   <el-form-item label="密码：">
-                    <el-input type="password" v-model="form.userPwd" auto-complete="off"></el-input>
+                    <el-input type="password" v-model="form.password" auto-complete="off"></el-input>
                   </el-form-item>
                   <el-button type="primary" @click="login" >登陆</el-button>
                 <router-link class="link-without-underline" to="/register"><span class="router_span">立即注册</span></router-link>
@@ -33,7 +34,19 @@
     methods:{
       login(){
         user.login(this.form).then(data=>{
-          console.log(data.code);
+          this.form={};
+          console.log(data.data);
+          if(data.code===0) {
+            if (data.data.flag === 2) {
+              this.$router.push("/frontMainPage");
+            }
+          }else{
+            this.$alert(data.msg, '登陆失败', {
+              confirmButtonText: '确定'
+              , callback: action => {
+              }
+            })
+          }
         }).catch(err=>{
 
         });
@@ -48,7 +61,6 @@
   *{
     padding: 0px;
   }
-
   .router_span{
     color: white;
   }
