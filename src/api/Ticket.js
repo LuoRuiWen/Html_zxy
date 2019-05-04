@@ -4,6 +4,7 @@ export default{
   load:params=>{
     return API.GET("list",params);
   },
+
   // delete:params=>{
   //   return API.DELETE("delClassify",params);
   // },

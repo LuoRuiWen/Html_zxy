@@ -2,32 +2,40 @@
     <div id="tickets">
       <el-container>
         <el-header>
-          欢迎来到xxx火车票系统
+          欢迎来到xxx火车票系统{{OriginalTickets}}
         </el-header>
         <el-main>
           <el-row>
             <template>
               <el-row>
-                <el-radio v-model="queryParam" label="1">车次</el-radio><el-input v-model="searchByTrain"></el-input>
+                <el-col :span="4">
+                  <el-radio v-model="queryParam" label="1">车次</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-input v-model="searchByTrain" size="medium"></el-input>
+                </el-col>
               </el-row>
               <el-row>
-                <el-radio v-model="queryParam" label="2">车站</el-radio>
-                起始站：<el-input v-model="searchBySart"></el-input>
-                终点站：<el-input v-model="searchByEnd"></el-input>
+                <el-col :span="4">
+                  <el-radio v-model="queryParam" label="2">车站</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-input v-model="searchBySart" size="medium">
+                    <template slot="prepend">起始站：</template>
+                  </el-input>
+                </el-col>
+                <el-col :span="5" :offset="6">
+                  <el-input v-model="searchByEnd" size="medium">
+                    <template slot="prepend">终点站：</template>
+                  </el-input>
+                </el-col>
               </el-row>
             </template>
-            <el-col :span="3">
-              <el-input v-model="searchBySart"></el-input>
-            </el-col>
-            <el-col :span="3">
-              <el-input v-model="searchByEnd"></el-input>
-            </el-col>
-            <el-col :span="3">
-              <el-input v-model="searchByTrain"></el-input>
-            </el-col>
           </el-row>
           <el-row>
-            <el-button round @click="query()">查询</el-button>
+            <el-col :span="2" :offset="18">
+              <el-button round @click="query()">查询</el-button>
+            </el-col>
           </el-row>
           <el-row>
             <el-table border :data="OriginalTickets.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%;;">
@@ -62,12 +70,13 @@
         name: 'Tickets',
         data(){
               return{
-                queryParam:'',
+                queryParam:'1',
                 pagesize:9,     //每页的数据条数
                 currentPage:1,  //默认开始页面
                 total:'1000',
                 OriginalTickets:[],
                 tableData:[],
+                tableProps:[],
                 propsDefault:[{
                   props:'tname',
                   label:'车次'
@@ -93,6 +102,7 @@
               }
         },
       created:function() {
+        this.tableProps=this.propsDefault;
         ticket.load().then(data=>{
             this.OriginalTickets=data;
         });
