@@ -65,7 +65,6 @@
 <style lang="scss">
   #register_page{
     height: 100%;
-    min-height: 800px;
     width: inherit;
     min-width: 1140px;
     background: rgba(255,111,0,0.7);
