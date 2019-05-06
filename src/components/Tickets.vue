@@ -44,7 +44,7 @@
               </template>
               <el-table-column  width="125px">
                 <template slot-scope="scope">
-                  <el-button round size="mini" icon="el-icon-date" @click="buy(scope.row.tid,scope.row.price)">购票</el-button>
+                  <el-button round size="mini" icon="el-icon-date" @click="buy(scope.row.tid,scope.row.price,scope.row.start,scope.row.end)">购票</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -61,7 +61,7 @@
           <el-form :model="ruleForm" status-icon ref="ruleForm" label-width="100px" class="demo-ruleForm">
             <el-form-item label="总票价">{{ruleForm.price}}</el-form-item>
             <el-form-item label="姓名" prop="pass">
-              <el-input v-model="ruleForm.namee" auto-complete="off"></el-input>
+              <el-input v-model="ruleForm.name" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="身份证号码" prop="checkPass">
               <el-input v-model="ruleForm.IDNum" auto-complete="off"></el-input>
@@ -73,12 +73,12 @@
             </template>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+              <el-button type="primary" @click="submitForm()">提交</el-button>
               <el-button @click="resetForm('ruleForm')">重置</el-button>
             </el-form-item>
           </el-form>
         </el-dialog>
-        {{'长度'+total}}
+        {{'长度'+total}}{{"shishi"+OriginalTickets.length}}
       </el-container>
     </div>
 </template>
@@ -87,15 +87,15 @@
   import ticket from '../api/Ticket.js'
 
     export default {
-        name: 'Tickets',
-        data(){
+      name: 'Tickets',
+      data(){
               return{
                 dialogFormVisible:false,
                 queryParam:'1',
                 pagesize:9,     //每页的数据条数
                 currentPage:1,  //默认开始页面
-                total:'1000',
                 OriginalTickets:[],
+                total:0,
                 tableData:[],
                 tableProps:[],
                 propsDefault:[{
@@ -127,10 +127,13 @@
                 searchByEnd:'',
                 searchByTrain:'',
                 ruleForm: {
+                  tid:'',
                   name: '',
                   IDNum: '',
                   student: '',
-                  price:''
+                  price:'',
+                  start:'',
+                  end:''
                 },
               }
         },
@@ -148,7 +151,8 @@
         query:function(){
           //车次查询
           if(this.queryParam==1){
-            ticket.findByTname().then(data=>{
+            ticket.findByTname({tname:this.searchByTrain}).then(data=>{
+              console.log(data);
               this.OriginalTickets = data;
             });
             //车站查询
@@ -162,10 +166,20 @@
             });
           }
         },
-        buy:function (tid,price) {
+        buy:function (tid,price,start,end) {
           this.dialogFormVisible=true;
+          this.ruleForm.tid=tid;
           this.ruleForm.price=price;
+          this.ruleForm.start=start;
+          this.ruleForm.end=end;
           console.log(tid+"票价"+price);
+
+        },
+        submitForm:function () {
+          console.log(this.ruleForm);
+          ticket.booking({tid:this.ruleForm.tid,price:this.ruleForm.price,start:this.ruleForm.start,end:this.ruleForm.end}).then(data=>{
+            // console.log(data);
+          })
         }
       }
     }
