@@ -2,7 +2,9 @@
     <div id="tickets">
       <el-container>
         <el-header>
-          欢迎来到xxx火车票系统{{OriginalTickets}}
+          <el-row>
+            <el-col :offset="22" :span="4" ><el-button size="small" type="info" @click="myOrder()">我的订单</el-button></el-col>
+          </el-row>
         </el-header>
         <el-main>
           <el-row>
@@ -48,12 +50,14 @@
                 </template>
               </el-table-column>
             </el-table>
+
             <el-pagination class="fy"
-                           layout="prev, pager, next"
-                           @current-change="current_change"
-                           :total="total"
-                           background
-            >
+              @size-change="handleSizeChange"
+              @current-change="current_change"
+              :current-page="currentPage"
+            :page-size="pagesize"
+            layout="total, prev, pager, next, jumper"
+            :total="OriginalTickets.length">
             </el-pagination>
           </el-row>
         </el-main>
@@ -78,21 +82,21 @@
             </el-form-item>
           </el-form>
         </el-dialog>
-        {{'长度'+total}}{{"shishi"+OriginalTickets.length}}
       </el-container>
     </div>
 </template>
 
 <script>
   import ticket from '../api/Ticket.js'
-
+  // import qs from 'qs'
+  var qs = require('qs')
     export default {
       name: 'Tickets',
       data(){
               return{
                 dialogFormVisible:false,
                 queryParam:'1',
-                pagesize:9,     //每页的数据条数
+                pagesize:5,     //每页的数据条数
                 currentPage:1,  //默认开始页面
                 OriginalTickets:[],
                 total:0,
@@ -145,6 +149,11 @@
         this.total=this.OriginalTickets.length;
       },
       methods:{
+        // 初始页currentPage、初始每页数据数pagesize和数据data
+        handleSizeChange: function (size) {
+          this.pagesize = size;
+          console.log(this.pagesize)  //每页下拉显示数据
+        },
         current_change:function(currentPage){
           this.currentPage = currentPage;
         },
@@ -177,9 +186,14 @@
         },
         submitForm:function () {
           console.log(this.ruleForm);
-          ticket.booking({tid:this.ruleForm.tid,price:this.ruleForm.price,start:this.ruleForm.start,end:this.ruleForm.end}).then(data=>{
+          var ruleForm = qs.stringify(this.ruleForm);
+          console.log(ruleForm);
+          ticket.booking(ruleForm).then(data=>{
             // console.log(data);
           })
+        },
+        myOrder:function () {
+          this.$router.push("/MyOrder");
         }
       }
     }

@@ -4,6 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
 import Tickets from '@/components/Tickets'
+import MyOrder from '@/components/MyOrder'
 
 import BackStageMainPage from '@/components/BackStageMainPage'
 import BackStageTicketsPage from '@/components/BackStageTicketsPage'
@@ -31,6 +32,11 @@ export default new Router({
       path: '/Tickets',
       name: 'Tickets',
       component: Tickets
+    },
+    {
+      path: '/MyOrder',
+      name: 'MyOrder',
+      component: MyOrder
     },
     {
       path:'/backStageMainPage',
