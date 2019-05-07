@@ -40,6 +40,9 @@
             if (data.data.flag === 2) {
               this.$router.push("/frontMainPage");
             }
+            if (data.data.flag === 1) {
+              this.$router.push("/backStageMainPage");
+            }
           }else{
             this.$alert(data.msg, '登陆失败', {
               confirmButtonText: '确定'
@@ -76,6 +79,7 @@
   }
 
   .head-box{
+    padding-top: 50px;
     height: 200px;
     position: relative;
   }

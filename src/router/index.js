@@ -5,6 +5,9 @@ import Login from '@/components/Login'
 import Register from '@/components/Register'
 import Tickets from '@/components/Tickets'
 
+import BackStageMainPage from '@/components/BackStageMainPage'
+import BackStageTicketsPage from '@/components/BackStageTicketsPage'
+
 Vue.use(Router)
 
 export default new Router({
@@ -29,5 +32,17 @@ export default new Router({
       name: 'Tickets',
       component: Tickets
     },
+    {
+      path:'/backStageMainPage',
+      name:'backStageMainPage',
+      component:BackStageMainPage,
+      children:[
+        {
+          path:'tickets',
+          name:'tickets',
+          component:BackStageTicketsPage
+        }
+      ]
+    }
   ]
 })
