@@ -2,7 +2,9 @@
     <div id="tickets">
       <el-container>
         <el-header>
-          欢迎来到xxx火车票系统{{OriginalTickets}}
+          <el-row>
+            <el-col :offset="22" :span="4" ><el-button size="small" type="info" @click="myOrder()">我的订单</el-button></el-col>
+          </el-row>
         </el-header>
         <el-main>
           <el-row>
@@ -44,16 +46,18 @@
               </template>
               <el-table-column  width="125px">
                 <template slot-scope="scope">
-                  <el-button round size="mini" icon="el-icon-date" @click="buy(scope.row.tid,scope.row.price)">购票</el-button>
+                  <el-button round size="mini" icon="el-icon-date" @click="buy(scope.row.tid,scope.row.price,scope.row.start,scope.row.end)">购票</el-button>
                 </template>
               </el-table-column>
             </el-table>
+
             <el-pagination class="fy"
-                           layout="prev, pager, next"
-                           @current-change="current_change"
-                           :total="total"
-                           background
-            >
+              @size-change="handleSizeChange"
+              @current-change="current_change"
+              :current-page="currentPage"
+            :page-size="pagesize"
+            layout="total, prev, pager, next, jumper"
+            :total="OriginalTickets.length">
             </el-pagination>
           </el-row>
         </el-main>
@@ -61,7 +65,7 @@
           <el-form :model="ruleForm" status-icon ref="ruleForm" label-width="100px" class="demo-ruleForm">
             <el-form-item label="总票价">{{ruleForm.price}}</el-form-item>
             <el-form-item label="姓名" prop="pass">
-              <el-input v-model="ruleForm.namee" auto-complete="off"></el-input>
+              <el-input v-model="ruleForm.name" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="身份证号码" prop="checkPass">
               <el-input v-model="ruleForm.IDNum" auto-complete="off"></el-input>
@@ -73,29 +77,29 @@
             </template>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+              <el-button type="primary" @click="submitForm()">提交</el-button>
               <el-button @click="resetForm('ruleForm')">重置</el-button>
             </el-form-item>
           </el-form>
         </el-dialog>
-        {{'长度'+total}}
       </el-container>
     </div>
 </template>
 
 <script>
   import ticket from '../api/Ticket.js'
-
+  // import qs from 'qs'
+  var qs = require('qs')
     export default {
-        name: 'Tickets',
-        data(){
+      name: 'Tickets',
+      data(){
               return{
                 dialogFormVisible:false,
                 queryParam:'1',
-                pagesize:9,     //每页的数据条数
+                pagesize:5,     //每页的数据条数
                 currentPage:1,  //默认开始页面
-                total:'1000',
                 OriginalTickets:[],
+                total:0,
                 tableData:[],
                 tableProps:[],
                 propsDefault:[{
@@ -127,10 +131,13 @@
                 searchByEnd:'',
                 searchByTrain:'',
                 ruleForm: {
+                  tid:'',
                   name: '',
                   IDNum: '',
                   student: '',
-                  price:''
+                  price:'',
+                  start:'',
+                  end:''
                 },
               }
         },
@@ -142,13 +149,19 @@
         this.total=this.OriginalTickets.length;
       },
       methods:{
+        // 初始页currentPage、初始每页数据数pagesize和数据data
+        handleSizeChange: function (size) {
+          this.pagesize = size;
+          console.log(this.pagesize)  //每页下拉显示数据
+        },
         current_change:function(currentPage){
           this.currentPage = currentPage;
         },
         query:function(){
           //车次查询
           if(this.queryParam==1){
-            ticket.findByTname().then(data=>{
+            ticket.findByTname({tname:this.searchByTrain}).then(data=>{
+              console.log(data);
               this.OriginalTickets = data;
             });
             //车站查询
@@ -162,10 +175,25 @@
             });
           }
         },
-        buy:function (tid,price) {
+        buy:function (tid,price,start,end) {
           this.dialogFormVisible=true;
+          this.ruleForm.tid=tid;
           this.ruleForm.price=price;
+          this.ruleForm.start=start;
+          this.ruleForm.end=end;
           console.log(tid+"票价"+price);
+
+        },
+        submitForm:function () {
+          console.log(this.ruleForm);
+          var ruleForm = qs.stringify(this.ruleForm);
+          console.log(ruleForm);
+          ticket.booking(ruleForm).then(data=>{
+            // console.log(data);
+          })
+        },
+        myOrder:function () {
+          this.$router.push("/MyOrder");
         }
       }
     }

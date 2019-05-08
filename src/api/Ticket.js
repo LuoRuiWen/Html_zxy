@@ -9,6 +9,9 @@ export default{
   },
   findByTname:params=>{
     return API.GET("findByTname",params);
+  },
+  booking:params=>{
+    return API.GET("booking",params);
   }
   // delete:params=>{
   //   return API.DELETE("delClassify",params);
