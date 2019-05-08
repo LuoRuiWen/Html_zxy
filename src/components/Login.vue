@@ -38,7 +38,13 @@
           console.log(data.data);
           if(data.code===0) {
             if (data.data.flag === 2) {
-              this.$router.push("/frontMainPage");
+              this.$router.push(
+                {
+                  path:"/frontMainPage",
+                  params:{
+                    userId:data.data.id
+                  }
+              });
             }
             if (data.data.flag === 1) {
               this.$router.push("/backStageMainPage");

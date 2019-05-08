@@ -2,14 +2,14 @@
     <div>
       <div id="backstage_tickets_head">
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-          <el-tab-pane label="添加车票" name="first">
+          <el-tab-pane label="添加车次" name="first">
             <div class="backstage_tickets_add_tickets">
               <el-row :style="{height:60+'px',lineHeight: 60+'px'}">
 
               </el-row>
               <div id="backstage_tickets_add_tickets_formBox" class="backstage_tickets_add_tickets_formBox">
                 <el-form  ref="form" :model="form" label-width="50px">
-                    <el-row>
+                    <el-row >
                       <el-col :span="8">
                         <el-form-item label="请输入列车编号" label-width="120px">
                           <el-input v-model="form.tname" placeholder="如：k999"></el-input>
@@ -26,7 +26,7 @@
                         </el-form-item>
                       </el-col>
                     </el-row>
-                    <el-row v-for="i in stations">
+                    <el-row v-for="i in stations" style="border-top: 1px solid darkgray">
                       <el-col :span="5">
                         <el-form-item label="省份">
                           <el-select v-model="form.stop[i-1].proId" placeholder="请选择" @change="change_province(i-1)">
@@ -42,13 +42,6 @@
                         </el-form-item>
                       </el-col>
                       <el-col :span="8">
-                        <el-form-item label="发车时间：" v-if="i<stations" label-width="85px">
-                          <el-date-picker
-                            v-model="form.stop[i-1].awayTime"
-                            type="datetime"
-                            placeholder="选择日期时间">
-                          </el-date-picker>
-                        </el-form-item>
                         <el-form-item label="抵达时间：" v-if="i>1" label-width="85px">
                           <el-date-picker
                             v-model="form.stop[i-1].arriveTime"
@@ -56,8 +49,15 @@
                             placeholder="选择日期时间">
                           </el-date-picker>
                         </el-form-item>
+                        <el-form-item label="发车时间：" v-if="i<stations" label-width="85px">
+                          <el-date-picker
+                            v-model="form.stop[i-1].awayTime"
+                            type="datetime"
+                            placeholder="选择日期时间">
+                          </el-date-picker>
+                        </el-form-item>
                       </el-col>
-                      <el-col :span="5">
+                      <el-col :span="5" v-if="i>1">
                         <el-form-item label="票价:">
                           <el-input v-model="form.stop[i-1].price" placeholder="票价">
                           </el-input>
@@ -102,8 +102,38 @@
         save(){
           ticketService.addTrain(this.form).then(data=>{
             console.log(data);
+            if(data.code!==0){
+              this.$alert(data.msg, 'code:'+data.code, {
+                confirmButtonText: '确定'
+                , callback: action => {
+                  /*this.$message({
+                    type: 'info',
+                    message: `action: ${action}`
+                  });*/
+                }
+              });
+            }else{
+              this.$alert('添加成功', 'code:'+data.code, {
+                confirmButtonText: '确定'
+                , callback: action => {
+                  /*this.$message({
+                    type: 'info',
+                    message: `action: ${action}`
+                  });*/
+                  this.form={tname:'',num:'',stop:[{proId:'',sname:'',arriveTime:'',awayTime:'',price:'',level:0},{proId:'',sname:'',arriveTime:'',awayTime:'',price:'',level:0}]};
+                }
+              });
+            }
           }).catch(err=>{
-
+            this.$alert('添加失败', 'code:'+err.code, {
+              confirmButtonText: '确定'
+              , callback: action => {
+                /*this.$message({
+                  type: 'info',
+                  message: `action: ${action}`
+                });*/
+               }
+            });
           });
         },
         change_province(val){

@@ -22,7 +22,7 @@
               </template>
               <el-menu-item-group>
                 <el-menu-item index="1-1" route="/backStageMainPage/tickets">添加车次</el-menu-item>
-                <el-menu-item index="1-2">车票分配</el-menu-item>
+                <el-menu-item index="1-2" route="/backStageMainPage/trains">站次管理</el-menu-item>
               </el-menu-item-group>
               <el-menu-item-group title="分组2">
                 <el-menu-item index="1-3">选项3</el-menu-item>

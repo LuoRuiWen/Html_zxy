@@ -7,6 +7,7 @@ import Tickets from '@/components/Tickets'
 
 import BackStageMainPage from '@/components/BackStageMainPage'
 import BackStageTicketsPage from '@/components/BackStageTicketsPage'
+import BackStageTrainList from '@/components/BackStageTrainList'
 
 Vue.use(Router)
 
@@ -41,6 +42,11 @@ export default new Router({
           path:'tickets',
           name:'tickets',
           component:BackStageTicketsPage
+        },
+        {
+          path:'trains',
+          name:'trains',
+          component:BackStageTrainList
         }
       ]
     }
