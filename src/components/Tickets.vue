@@ -139,7 +139,7 @@
               }
         },
       created:function() {
-        console.log("用户id"+this.uid);
+        this.uid = this.$route.query.userId;
         this. getParams ();
         this.tableProps=this.propsDefault;
         ticket.load().then(data=>{
@@ -152,7 +152,7 @@
       },
       methods: {
           getParams() {
-            this.uid = this.$route.query.uid;
+            console.log("用户id"+this.uid);
           },
           // 初始页currentPage、初始每页数据数pagesize和数据data
           handleSizeChange: function (size) {

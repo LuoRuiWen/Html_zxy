@@ -14,6 +14,12 @@
           <el-col :span="4">
             {{train.num}}
           </el-col>
+          <el-col :span="4">
+            {{train.awayTime}}
+          </el-col>
+          <el-col :span="4">
+            {{train.arriveTime}}
+          </el-col>
         </el-row>
       </el-tab-pane>
     </el-tabs>
