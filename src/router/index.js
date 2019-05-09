@@ -10,6 +10,8 @@ import BackStageMainPage from '@/components/BackStageMainPage'
 import BackStageTicketsPage from '@/components/BackStageTicketsPage'
 import BackStageTrainList from '@/components/BackStageTrainList'
 
+import BackStageModifyStop from '@/components/BackStageModifyStop'
+
 Vue.use(Router)
 
 export default new Router({
@@ -53,6 +55,11 @@ export default new Router({
           path:'trains',
           name:'trains',
           component:BackStageTrainList
+        },
+        {
+          path:'modifyStop',
+          name:'modifyStop',
+          component:BackStageModifyStop
         }
       ]
     }

@@ -125,7 +125,7 @@
               });
             }
           }).catch(err=>{
-            this.$alert('添加失败', 'code:'+err.code, {
+            this.$alert('添加失败', {
               confirmButtonText: '确定'
               , callback: action => {
                 /*this.$message({
