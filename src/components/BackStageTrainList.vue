@@ -7,9 +7,9 @@
             <label>暂无列车信息</label>
           </el-col>
         </el-row>
-        <el-row v-for="(trian,index) in trains" style="border: 1px solid darkgray;border-radius: 5px">
+        <el-row v-for="(train,index) in trains" style="border: 1px solid darkgray;border-radius: 5px">
           <el-col :span="4">
-            {{train.name}}
+            {{train.tname}}
           </el-col>
           <el-col :span="4">
             {{train.num}}
@@ -21,14 +21,26 @@
 </template>
 
 <script>
+  import tickets from "../api/backstage_tickes_service.js"
     export default {
         name: "BackStageTrainList",
         data(){
           return{
+            totle:1,
+            pageSize:10,
+            currentPage:0,
             activeName:'first',
-            train:{stops:[]},
             trains:[]
           }
+        },
+        mounted() {
+          tickets.trainList({pageSize:this.pageSize,currentPage: this.currentPage}).then(data=>{
+            console.log(data.data);
+            if (data.data.list.length!==0){
+              this.trains = data.data.list;
+              console.log(this.trains.length+"length");
+            }
+          })
         }
     }
 </script>

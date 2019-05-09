@@ -40,8 +40,8 @@
             if (data.data.flag === 2) {
               this.$router.push(
                 {
-                  path:"/frontMainPage",
-                  params:{
+                  path:"/Tickets",
+                  query:{
                     userId:data.data.id
                   }
               });

@@ -41,19 +41,21 @@
         },
         methods:{
           register(){
+            let $this =this;
             user.register(this.form).then(()=>{
-              this.$alert('注册成功，将在3秒后跳转到登陆页面', '标题名称', {
+              /*this.$alert('注册成功，将在3秒后跳转到登陆页面', '标题名称', {
                 confirmButtonText: '确定'
                 , callback: action => {
-                  /*this.$message({
+                  this.$message({
                     type: 'info',
                     message: `action: ${action}`
-                  });*/
-                  this.$router.push('/');
+                  });
+                  $this.$router.push('/');
                 }
-              });
+              });*/
+              this.$message('注册成功，将在3秒后跳转到登陆页面');
               setTimeout(function(){
-                this.$router.push('/');
+                $this.$router.push('/');
               },5000);
             }).catch()
           }
