@@ -11,7 +11,7 @@ export default{
     return API.GET("findByTname",params);
   },
   booking:params=>{
-    return API.GET("booking",params);
+    return API.POST("booking",params);
   }
   // delete:params=>{
   //   return API.DELETE("delClassify",params);

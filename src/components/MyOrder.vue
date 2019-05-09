@@ -39,13 +39,17 @@
       name: "MyOrder",
       data(){
           return{
+            uid:'',
+            tid:'',
             orderDatas:[],
             currentPage:1,
             pagesize:5,
           }
       },
       created:function () {
-        order.load().then(data=>{
+        this.uid=this.$route.params.uid;
+        console.log("用户id"+this.uid);
+        order.load({uid:this.uid}).then(data=>{
           this.orderDatas=data;
         });
       },
@@ -59,9 +63,23 @@
           this.currentPage = currentPage;
         },
         refund:function () {
-          order.refund().then(data=>{
-
-          })
+          this.$confirm('是否确定退票?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            order.refund({oid:this.oid}).then(data=>{
+            })
+            this.$message({
+              type: 'success',
+              message: '退票成功!'
+            });
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消操作'
+            });
+          });
         }
       }
     }

@@ -88,12 +88,11 @@
 
 <script>
   import ticket from '../api/Ticket.js'
-  // import qs from 'qs'
-  var qs = require('qs')
     export default {
       name: 'Tickets',
       data(){
               return{
+                uid:'',
                 dialogFormVisible:false,
                 queryParam:'1',
                 pagesize:5,     //每页的数据条数
@@ -103,9 +102,6 @@
                 tableData:[],
                 tableProps:[],
                 propsDefault:[{
-                  props:'tid',
-                  label:'编号'
-                },{
                   props:'tname',
                   label:'车次'
                 },{
@@ -131,10 +127,11 @@
                 searchByEnd:'',
                 searchByTrain:'',
                 ruleForm: {
+                  uid:this.$route.query.uid,
                   tid:'',
                   name: '',
                   IDNum: '',
-                  student: '',
+                  student: false,
                   price:'',
                   start:'',
                   end:''
@@ -142,61 +139,92 @@
               }
         },
       created:function() {
+        console.log("用户id"+this.uid);
+        this. getParams ();
         this.tableProps=this.propsDefault;
         ticket.load().then(data=>{
             this.OriginalTickets=data;
         });
         this.total=this.OriginalTickets.length;
       },
-      methods:{
-        // 初始页currentPage、初始每页数据数pagesize和数据data
-        handleSizeChange: function (size) {
-          this.pagesize = size;
-          console.log(this.pagesize)  //每页下拉显示数据
-        },
-        current_change:function(currentPage){
-          this.currentPage = currentPage;
-        },
-        query:function(){
-          //车次查询
-          if(this.queryParam==1){
-            ticket.findByTname({tname:this.searchByTrain}).then(data=>{
-              console.log(data);
-              this.OriginalTickets = data;
-            });
-            //车站查询
-          }else{
-            console.log("起点"+this.searchBySart);
-            ticket.findBySname({start:this.searchBySart,end:this.searchByEnd}).then(data=>{
-              console.log(data);
-              this.OriginalTickets=data;
-            }).catch(err=>{
-              console.log(err);
-            });
-          }
-        },
-        buy:function (tid,price,start,end) {
-          this.dialogFormVisible=true;
-          this.ruleForm.tid=tid;
-          this.ruleForm.price=price;
-          this.ruleForm.start=start;
-          this.ruleForm.end=end;
-          console.log(tid+"票价"+price);
+      watch:{
+        '$route': 'getParams'
+      },
+      methods: {
+          getParams() {
+            this.uid = this.$route.query.uid;
+          },
+          // 初始页currentPage、初始每页数据数pagesize和数据data
+          handleSizeChange: function (size) {
+            this.pagesize = size;
+            console.log(this.pagesize)  //每页下拉显示数据
+          },
+          current_change: function (currentPage) {
+            this.currentPage = currentPage;
+          },
+          query: function () {
+            //车次查询
+            if (this.queryParam == 1) {
+              ticket.findByTname({tname: this.searchByTrain}).then(data => {
+                console.log(data);
+                this.OriginalTickets = data;
+              });
+              //车站查询
+            } else {
+              console.log("起点" + this.searchBySart);
+              ticket.findBySname({start: this.searchBySart, end: this.searchByEnd}).then(data => {
+                console.log(data);
+                this.OriginalTickets = data;
+              }).catch(err => {
+                console.log(err);
+              });
+            }
+          },
+          buy: function (tid, price, start, end) {
+            this.dialogFormVisible = true;
+            this.ruleForm.tid = tid;
+            this.ruleForm.price = price;
+            this.ruleForm.start = start;
+            this.ruleForm.end = end;
+            console.log(tid + "票价" + price);
 
-        },
-        submitForm:function () {
-          console.log(this.ruleForm);
-          var ruleForm = qs.stringify(this.ruleForm);
-          console.log(ruleForm);
-          ticket.booking(ruleForm).then(data=>{
-            // console.log(data);
-          })
-        },
-        myOrder:function () {
-          this.$router.push("/MyOrder");
+          },
+          submitForm: function () {
+            console.log(this.ruleForm);
+            ticket.booking(this.ruleForm).then(data => {
+              // console.log(data);
+            })
+            this.$router.push({
+              path: '/MyOrder',
+              query: {
+                uid: this.uid,
+              }
+            }).then(() => {
+              order.refund({oid: this.oid}).then(data => {
+              })
+              this.$message({
+                type: 'success',
+                message: '订票成功!'
+              });
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消操作'
+              });
+            });
+          },
+          myOrder: function () {
+            // this.$router.push("/MyOrder");
+            this.$router.push(
+              {
+                path: "/MyOrder",
+                query: {
+                  userId: this.id
+                }
+              });
+          }
         }
       }
-    }
 </script>
 
 <style scoped>
