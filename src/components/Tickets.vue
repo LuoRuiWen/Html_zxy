@@ -14,7 +14,7 @@
                   <el-radio v-model="queryParam" label="1">车次</el-radio>
                 </el-col>
                 <el-col :span="5">
-                  <el-input v-model="searchByTrain" size="medium"></el-input>
+                  <el-input v-model.trim="searchByTrain" size="medium"></el-input>
                 </el-col>
               </el-row>
               <el-row>
@@ -22,12 +22,12 @@
                   <el-radio v-model="queryParam" label="2">车站</el-radio>
                 </el-col>
                 <el-col :span="5">
-                  <el-input v-model="searchBySart" size="medium">
+                  <el-input v-model.trim="searchBySart" size="medium">
                     <template slot="prepend">起始站：</template>
                   </el-input>
                 </el-col>
                 <el-col :span="5" :offset="6">
-                  <el-input v-model="searchByEnd" size="medium">
+                  <el-input v-model.trim="searchByEnd" size="medium">
                     <template slot="prepend">终点站：</template>
                   </el-input>
                 </el-col>
@@ -152,6 +152,7 @@
       },
       methods: {
           getParams() {
+            this.ruleForm.uid=this.uid;
             console.log("用户id"+this.uid);
           },
           // 初始页currentPage、初始每页数据数pagesize和数据data
@@ -165,19 +166,32 @@
           query: function () {
             //车次查询
             if (this.queryParam == 1) {
-              ticket.findByTname({tname: this.searchByTrain}).then(data => {
-                console.log(data);
-                this.OriginalTickets = data;
-              });
+              if(this.searchByTrain!=""){
+                ticket.findByTname({tname: this.searchByTrain}).then(data => {
+                  console.log(data);
+                  this.OriginalTickets = data;
+                });
+              }else{
+                this.$alert('不能为空', '警告', {
+                  confirmButtonText: '确定',
+                });
+              }
               //车站查询
             } else {
-              console.log("起点" + this.searchBySart);
-              ticket.findBySname({start: this.searchBySart, end: this.searchByEnd}).then(data => {
-                console.log(data);
-                this.OriginalTickets = data;
-              }).catch(err => {
-                console.log(err);
-              });
+              if(this.searchBySart!=""&&this.searchByEnd!=""){
+                console.log("起点" + this.searchBySart);
+                ticket.findBySname({start: this.searchBySart, end: this.searchByEnd}).then(data => {
+                  console.log(data);
+                  this.OriginalTickets = data;
+                }).catch(err => {
+                  console.log(err);
+                });
+              }else{
+                this.$alert('不能为空', '警告', {
+                  confirmButtonText: '确定',
+                });
+              }
+
             }
           },
           buy: function (tid, price, start, end) {
@@ -193,14 +207,11 @@
             console.log(this.ruleForm);
             ticket.booking(this.ruleForm).then(data => {
               // console.log(data);
-            })
-            this.$router.push({
-              path: '/MyOrder',
-              query: {
-                uid: this.uid,
-              }
-            }).then(() => {
-              order.refund({oid: this.oid}).then(data => {
+              this.$router.push({
+                path: '/MyOrder',
+                query: {
+                  uid: this.uid,
+                }
               })
               this.$message({
                 type: 'success',
@@ -219,7 +230,7 @@
               {
                 path: "/MyOrder",
                 query: {
-                  userId: this.id
+                  userId: this.uid
                 }
               });
           }

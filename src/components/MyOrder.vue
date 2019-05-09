@@ -7,15 +7,16 @@
       <el-table border :data="orderDatas.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%;">
         <el-table-column type="oid" width="150" label="订单号">
         </el-table-column>
-        <el-table-column prop="tname" label="车次"></el-table-column>
         <el-table-column prop="startName" label="起始站"></el-table-column>
         <el-table-column prop="startTime" label="起始时间"></el-table-column>
         <el-table-column prop="endName" label="起始站"></el-table-column>
         <el-table-column prop="endTime" label="终点时间"></el-table-column>
+        <el-table-column prop="price" label="价格"></el-table-column>
         <el-table-column prop="status" label="订单状态"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="primary" icon="el-icon-star-on" @click='refund(scope.row.oid)'>退票</el-button>
+            <el-button type="primary" small v-if="scope.row.status=='购买成功'" icon="el-icon-star-on" @click='refund(scope.row.oid)'>退票</el-button>
+            <el-button type="primary" small v-if="scope.row.status=='已退票'" disabled icon="el-icon-star-on" @click='refund(scope.row.oid)'>退票</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -47,10 +48,12 @@
           }
       },
       created:function () {
-        this.uid=this.$route.params.uid;
+        this.uid = this.$route.query.userId;
         console.log("用户id"+this.uid);
         order.load({uid:this.uid}).then(data=>{
+          console.log("数据："+data);
           this.orderDatas=data;
+          console.log(this.orderDatas);
         });
       },
       methods:{
