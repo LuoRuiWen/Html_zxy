@@ -54,6 +54,16 @@
             </el-dropdown>
           </el-col>
         </el-row>
+        <div class="block">
+          <el-pagination
+            background
+            @current-change="handleCurrentChange"
+            :current-page.sync="currentPage"
+            :page-size="pageSize"
+            layout="prev, pager, next, jumper"
+            :total="total">
+          </el-pagination>
+        </div>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -65,9 +75,9 @@
         name: "BackStageTrainList",
         data(){
           return{
-            totle:1,
+            total:1,
             pageSize:10,
-            currentPage:0,
+            currentPage:1,
             activeName:'first',
             trains:[]
           }
@@ -86,7 +96,7 @@
             });
           }else{
             tickets.deleteTrain(id).then(data=> {
-                if(data.code!=0){
+                if(data.code!==0){
                   this.$alert('删除失败', 'code:' + data.code, {
                     confirmButtonText: '确定'
                     , callback: action => {
@@ -141,6 +151,10 @@
               console.log(this.trains.length+"length");
             }
           });
+        },
+        handleCurrentChange(val) {
+          console.log(`当前页: ${val}`);
+          this.currentPage=val;
         }
       },
         mounted() {
@@ -154,5 +168,8 @@
     min-height: 500px;
     height:100vh;
     min-width:800px;
+  }
+  .block{
+    text-align: center;
   }
 </style>
