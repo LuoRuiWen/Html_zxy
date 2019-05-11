@@ -24,28 +24,21 @@
                 <el-menu-item index="1-1" route="/backStageMainPage/tickets">添加车次</el-menu-item>
                 <el-menu-item index="1-2" route="/backStageMainPage/trains">站次管理</el-menu-item>
               </el-menu-item-group>
-              <el-menu-item-group title="分组2">
-                <el-menu-item index="1-3">选项3</el-menu-item>
-              </el-menu-item-group>
-              <el-submenu index="1-4">
-                <template slot="title">选项4</template>
-                <el-menu-item index="1-4-1">选项1</el-menu-item>
-              </el-submenu>
             </el-submenu>
-            <el-submenu index="2">
+            <!--<el-submenu index="2">
               <template slot="title">
                 <i class="el-icon-menu"></i>
                 <span>成员管理</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="1-1" >查看成员</el-menu-item><!--route="/backStageMainPage/member"-->
+                <el-menu-item index="1-1" >查看成员</el-menu-item>&lt;!&ndash;route="/backStageMainPage/member"&ndash;&gt;
                 <el-menu-item index="1-2">车次</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-menu-item index="3">
               <i class="el-icon-setting"></i>
               <span slot="title">导航三</span>
-            </el-menu-item>
+            </el-menu-item>-->
           </el-menu>
         </el-aside>
         <el-main class="backstage_main_page_main">

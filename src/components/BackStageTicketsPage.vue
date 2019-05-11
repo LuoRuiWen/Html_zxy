@@ -78,9 +78,6 @@
         <el-tab-pane label="删除车票" name="third">删除车票</el-tab-pane>
         <el-tab-pane label="退票处理" name="fourth">退票处理</el-tab-pane>-->
       </div>
-      <div id="backstage_tickets_main">
-          {{form.tname}}
-      </div>
     </div>
 </template>
 
@@ -92,7 +89,7 @@
       data(){
           return{
             stations:2,
-            form:{tname:'',num:'',stop:[{proId:'',sname:'',arriveTime:'',awayTime:'',price:'',level:0},{proId:'',sname:'',arriveTime:'',awayTime:'',price:'',level:0}]},
+            form:{tname:'',num:'',stop:[{proId:'',sname:'',arriveTime:'',awayTime:'',price:'',level:0},{proId:'',sname:'',arriveTime:'',awayTime:'',price:'',level:1}]},
             activeName:'first',
             provinces:provinces,
             cities:[]
@@ -100,6 +97,7 @@
         },
       methods:{
         save(){
+          let $this =this;
           ticketService.addTrain(this.form).then(data=>{
             console.log(data);
             if(data.code!==0){
@@ -120,12 +118,14 @@
                     type: 'info',
                     message: `action: ${action}`
                   });*/
-                  this.form={tname:'',num:'',stop:[{proId:'',sname:'',arriveTime:'',awayTime:'',price:'',level:0},{proId:'',sname:'',arriveTime:'',awayTime:'',price:'',level:0}]};
+                  $this.stations=2;
+                  let newForm = {tname:'',num:'',stop:[{proId:'',sname:'',arriveTime:'',awayTime:'',price:'',level:0},{proId:'',sname:'',arriveTime:'',awayTime:'',price:'',level:1}]};
+                  $this.form=newForm;
                 }
               });
             }
           }).catch(err=>{
-            this.$alert('添加失败', 'code:'+err.code, {
+            this.$alert('添加失败', {
               confirmButtonText: '确定'
               , callback: action => {
                 /*this.$message({

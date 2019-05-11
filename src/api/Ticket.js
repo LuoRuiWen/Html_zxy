@@ -12,7 +12,7 @@ export default{
   },
   booking:params=>{
     return API.POST("booking",params);
-  }
+  },
   // delete:params=>{
   //   return API.DELETE("delClassify",params);
   // },
