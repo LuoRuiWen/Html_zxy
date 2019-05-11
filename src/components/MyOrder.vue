@@ -9,7 +9,7 @@
         </el-table-column>
         <el-table-column prop="startName" label="起始站"></el-table-column>
         <el-table-column prop="startTime" label="起始时间"></el-table-column>
-        <el-table-column prop="endName" label="起始站"></el-table-column>
+        <el-table-column prop="endName" label="终点站"></el-table-column>
         <el-table-column prop="endTime" label="终点时间"></el-table-column>
         <el-table-column prop="price" label="价格"></el-table-column>
         <el-table-column prop="status" label="订单状态"></el-table-column>
@@ -48,7 +48,7 @@
           }
       },
       created:function () {
-        this.uid = this.$route.query.userId;
+        this.uid = this.$route.query.uid;
         console.log("用户id"+this.uid);
         order.load({uid:this.uid}).then(data=>{
           console.log("数据："+data);
@@ -65,18 +65,31 @@
         current_change:function(currentPage){
           this.currentPage = currentPage;
         },
-        refund:function () {
+        refund:function (oid) {
           this.$confirm('是否确定退票?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            order.refund({oid:this.oid}).then(data=>{
+            order.refund({oid:oid}).then(data=>{
+            }).then(data=>{
+              if(data){
+                this.$message({
+                  type: 'success',
+                  message: '退票成功!'
+                });
+              }else {
+                this.$message({
+                  type: 'success',
+                  message: '超时，退票失败!'
+                });
+              }
+            }).catch(()=>{
+              this.$message({
+                type: 'success',
+                message: '超时，退票失败!'
+              });
             })
-            this.$message({
-              type: 'success',
-              message: '退票成功!'
-            });
           }).catch(() => {
             this.$message({
               type: 'info',

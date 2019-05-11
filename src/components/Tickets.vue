@@ -230,7 +230,7 @@
               {
                 path: "/MyOrder",
                 query: {
-                  userId: this.uid
+                  uid: this.uid
                 }
               });
           }
